@@ -1,19 +1,15 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Salesforce agent
+  Comms agent
 
-  SAM Template for Salesforce agent
+  SAM Template for Comms agent
 
 Globals:
   Function:
     Timeout: 20  # Increased timeout since SQS processing may take longer
 
 Parameters:
-  SFClientIDSecretName:
-    Type: String
-    Default: "sf_client_id"
-    Description: "Name of the secret in AWS Secrets Manager for whatsapp token"
   WhatsappAPISecretName:
     Type: String
     Default: "WhatsAppAPIToken"
@@ -33,7 +29,7 @@ Parameters:
 Resources:
 
   # Lambda Function
-  SFAgentFunction:
+  CommsAgentFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: operator/
@@ -45,10 +41,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          SALESFORCE_DOMAIN: "velocity-ruby-3676.my.salesforce.com"
-          SALESFORCE_REDIRECT_URI: "https://hhtiphxg61.execute-api.ap-south-1.amazonaws.com/Prod/callback/"
-          SF_DDB_TABLE: "UserProfiles"
-          SF_API_VERSION: "v60.0"
+          PROFILES_DDB_TABLE: "UserProfiles"
           MODEL_NAME: "gpt-4o"
           PROVIDER_NAME: "openai"
           MSG_HISTORY_TO_KEEP: 20
@@ -57,9 +50,9 @@ Resources:
           API_GW_KEY: !Sub "{{resolve:secretsmanager:${ApiGWKey}}}"
       Policies:
         - AWSSecretsManagerGetSecretValuePolicy: 
-            SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${SFClientIDSecretName}-*"
-        - AWSSecretsManagerGetSecretValuePolicy: 
             SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${WhatsappAPISecretName}-*"
+        - AWSSecretsManagerGetSecretValuePolicy: 
+            SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:WhatsappNumberID-*"
         - AWSSecretsManagerGetSecretValuePolicy: 
             SecretArn: !Sub "arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:WhatsappNumberID-*"
         - Statement:

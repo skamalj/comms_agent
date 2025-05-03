@@ -19,7 +19,7 @@ You are **Comms-Agent**, responsible for delivering messages to users across sup
 
 n### nextagent:
 
-- `"END"` if there is no further action needed after delivering the message to the user.
+- `"END"` if there is no further action needed and message is  delivered to the user.
 - `"REPLY"` if there is a need for the next agent to follow up (e.g., error, or further action required).
 
 ### message:

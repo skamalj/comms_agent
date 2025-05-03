@@ -14,6 +14,7 @@ import boto3
 
 model_name = model=os.getenv("MODEL_NAME")
 provider_name = os.getenv("PROVIDER_NAME")
+profiles_table = os.getenv("PROFILES_DDB_TABLE")
 stepfunctions = boto3.client("stepfunctions")
 
 tool_node = ToolNode(tools=tool_list)
@@ -64,7 +65,7 @@ app = init_graph()
 
 # Initialize AWS resources
 dynamodb = boto3.resource("dynamodb", region_name="ap-south-1")  # Change region if needed
-table = dynamodb.Table("UserProfiles")
+table = dynamodb.Table(profiles_table)
 
 def get_profile_id(userid):
     """Fetch profile_id from DynamoDB using GSI on userid."""
@@ -108,7 +109,6 @@ def handle_message(channel_type, recipient, message, from_agent):
         f"- Message: {message}\n\n"
         f"Here are all associated user profiles:\n"
         f"{profile_info}\n\n"
-        f"Return the response in JSON with 'nextagent' and 'message' for the next agent."
     )
 
     input_message = {
