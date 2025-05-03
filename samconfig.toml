@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "comms-agent"
+resolve_s3 = true
+s3_prefix = "comms-agent"
+region = "ap-south-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "WhatsappAPISecretName=\"WhatsAppAPIToken\" WhatsappNumberIDSecretname=\"WhatsappNumberID\" ApiGWKey=\"ApiGWKey\" ApiGWEndpoint=\"ApiGWEndpoint\""
+image_repositories = []
