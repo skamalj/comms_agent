@@ -124,7 +124,13 @@ def handle_message(channel_type, recipient, message, from_agent):
 
     # Assuming the comms_agent_response is in the format:
     # {"nextagent": "END", "message": "User-facing message delivered"}
-    parsed_response = json.loads(comms_agent_response)
+    if isinstance(comms_agent_response, str) and comms_agent_response.strip():
+        parsed_response = json.loads(comms_agent_response)
+    elif isinstance(comms_agent_response, dict):
+        parsed_response = comms_agent_response
+    else:
+        raise ValueError("Invalid response: not JSON or empty")
+
 
     # Final return response
     return {
